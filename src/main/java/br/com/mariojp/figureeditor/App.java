@@ -1,11 +1,14 @@
 package br.com.mariojp.figureeditor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -68,7 +71,18 @@ public class App {
         shapesMenu.add(ellipseItem);
         shapesMenu.add(rectangleItem);
 
+        JMenu colorMenu = new JMenu("Cor");
+
+        JMenuItem changeColorItem = new JMenuItem("Alterar cor");
+        changeColorItem.addActionListener(e -> {
+            Color color = JColorChooser.showDialog(null, "Alterar cor", panel.getSelectedColor());
+            panel.setSelectedColor(color);
+        });
+
+        colorMenu.add(changeColorItem);
+
         menuBar.add(shapesMenu);
+        menuBar.add(colorMenu);
 
         return menuBar;
     }

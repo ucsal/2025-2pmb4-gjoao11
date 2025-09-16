@@ -18,12 +18,22 @@ import javax.swing.JPanel;
 import br.com.mariojp.figureeditor.shapes.ShapeRenderer;
 
 class DrawingPanel extends JPanel {
+    private static class ColoredShape {
+        final Shape shape;
+        final Color color;
+
+        ColoredShape(Shape shape, Color color) {
+            this.shape = shape;
+            this.color = color;
+        }
+    }
 
     private static final long serialVersionUID = 1L;
     private static final int DEFAULT_SIZE = 60;
-    private final List<Shape> shapes = new ArrayList<>();
+    private final List<ColoredShape> shapes = new ArrayList<>();
     private Point startDrag = null;
     private ShapeRenderer selectedShapeRenderer = null;
+    private Color selectedColor = new Color(30, 144, 255);
 
     DrawingPanel() {
 
@@ -39,7 +49,7 @@ class DrawingPanel extends JPanel {
                     Shape s = selectedShapeRenderer.render(e.getPoint().x, e.getPoint().y, size);
                     // return new Rectangle2D.Double(e.getPoint().x, e.getPoint().y,
                     // Math.max(DEFAULT_SIZE, 10), Math.max(DEFAULT_SIZE, 10));
-                    shapes.add(s);
+                    shapes.add(new ColoredShape(s, selectedColor));
                     repaint();
                 }
             }
@@ -49,8 +59,16 @@ class DrawingPanel extends JPanel {
 
     }
 
-    public void setSelectedShape(ShapeRenderer selectedShapeRenderer) {
-        this.selectedShapeRenderer = selectedShapeRenderer;
+    public void setSelectedShape(ShapeRenderer shapeRenderer) {
+        selectedShapeRenderer = shapeRenderer;
+    }
+
+    public Color getSelectedColor() {
+        return selectedColor;
+    }
+
+    public void setSelectedColor(Color color) {
+        selectedColor = color;
     }
 
     void clear() {
@@ -64,12 +82,12 @@ class DrawingPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        for (Shape s : shapes) {
-            g2.setColor(new Color(30, 144, 255));
-            g2.fill(s);
+        for (ColoredShape s : shapes) {
+            g2.setColor(s.color);
+            g2.fill(s.shape);
             g2.setColor(new Color(0, 0, 0, 70));
             g2.setStroke(new BasicStroke(1.2f));
-            g2.draw(s);
+            g2.draw(s.shape);
         }
 
         g2.dispose();
