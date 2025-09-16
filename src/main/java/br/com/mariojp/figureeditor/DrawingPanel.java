@@ -10,11 +10,12 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
+
+import br.com.mariojp.figureeditor.shapes.ShapeRenderer;
 
 class DrawingPanel extends JPanel {
 
@@ -22,6 +23,7 @@ class DrawingPanel extends JPanel {
     private static final int DEFAULT_SIZE = 60;
     private final List<Shape> shapes = new ArrayList<>();
     private Point startDrag = null;
+    private ShapeRenderer selectedShapeRenderer = null;
 
     DrawingPanel() {
 
@@ -34,7 +36,7 @@ class DrawingPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1 && startDrag == null) {
                     int size = Math.max(Math.min(DEFAULT_SIZE, DEFAULT_SIZE), 10);
-                    Shape s = new Ellipse2D.Double(e.getPoint().x, e.getPoint().y, size, size);
+                    Shape s = selectedShapeRenderer.render(e.getPoint().x, e.getPoint().y, size);
                     // return new Rectangle2D.Double(e.getPoint().x, e.getPoint().y,
                     // Math.max(DEFAULT_SIZE, 10), Math.max(DEFAULT_SIZE, 10));
                     shapes.add(s);
@@ -45,6 +47,10 @@ class DrawingPanel extends JPanel {
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
 
+    }
+
+    public void setSelectedShape(ShapeRenderer selectedShapeRenderer) {
+        this.selectedShapeRenderer = selectedShapeRenderer;
     }
 
     void clear() {
