@@ -10,8 +10,7 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 import javax.swing.JPanel;
 
@@ -30,7 +29,8 @@ class DrawingPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private static final int DEFAULT_SIZE = 60;
-    private final List<ColoredShape> shapes = new ArrayList<>();
+    private final Stack<ColoredShape> shapes = new Stack<>();
+    private final Stack<ColoredShape> undoneShapes = new Stack<>();
     private Point startDrag = null;
     private ShapeRenderer selectedShapeRenderer = null;
     private Color selectedColor = new Color(30, 144, 255);
@@ -47,9 +47,8 @@ class DrawingPanel extends JPanel {
                 if (e.getClickCount() == 1 && startDrag == null) {
                     int size = Math.max(Math.min(DEFAULT_SIZE, DEFAULT_SIZE), 10);
                     Shape s = selectedShapeRenderer.render(e.getPoint().x, e.getPoint().y, size);
-                    // return new Rectangle2D.Double(e.getPoint().x, e.getPoint().y,
-                    // Math.max(DEFAULT_SIZE, 10), Math.max(DEFAULT_SIZE, 10));
                     shapes.add(new ColoredShape(s, selectedColor));
+                    undoneShapes.clear();
                     repaint();
                 }
             }
@@ -73,6 +72,7 @@ class DrawingPanel extends JPanel {
 
     void clear() {
         shapes.clear();
+        undoneShapes.clear();
         repaint();
     }
 
@@ -93,4 +93,13 @@ class DrawingPanel extends JPanel {
         g2.dispose();
     }
 
+    public void undo() {
+        undoneShapes.add(shapes.pop());
+        repaint();
+    }
+
+    public void redo() {
+        shapes.add(undoneShapes.pop());
+        repaint();
+    }
 }

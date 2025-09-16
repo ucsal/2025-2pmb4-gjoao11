@@ -81,8 +81,30 @@ public class App {
 
         colorMenu.add(changeColorItem);
 
+        JMenu editMenu = new JMenu("Editar");
+
+        JMenuItem undoItem = new JMenuItem("Desfazer ação");
+        undoItem.addActionListener(e -> {
+            panel.undo();
+        });
+
+        JMenuItem redoItem = new JMenuItem("Refazer ação");
+        redoItem.addActionListener(e -> {
+            panel.redo();
+        });
+
+        JMenuItem clearItem = new JMenuItem("Limpar tela");
+        clearItem.addActionListener(e -> {
+            panel.clear();
+        });
+
+        editMenu.add(undoItem);
+        editMenu.add(redoItem);
+        editMenu.add(clearItem);
+
         menuBar.add(shapesMenu);
         menuBar.add(colorMenu);
+        menuBar.add(editMenu);
 
         return menuBar;
     }
